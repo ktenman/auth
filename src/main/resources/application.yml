@@ -1,0 +1,41 @@
+server:
+  port: 8081
+  error:
+    whitelabel:
+      enabled: false
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+    session:
+      timeout: 10080m # 1 week
+
+spring:
+  application:
+    name: auth
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+  thymeleaf:
+    cache: false
+  data:
+    redis:
+      host: redis
+      port: 6379
+  session:
+    store-type: redis
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    ee.tenman.auth: DEBUG
+
