@@ -5,12 +5,12 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
-import org.springframework.stereotype.Component
 import java.io.IOException
 import java.security.MessageDigest
 
-@Component
-class CustomAuthenticationSuccessHandler : AuthenticationSuccessHandler {
+class CustomAuthenticationSuccessHandler(
+    private val redirectUrl: String
+) : AuthenticationSuccessHandler {
     @Throws(IOException::class, ServletException::class)
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
@@ -21,7 +21,7 @@ class CustomAuthenticationSuccessHandler : AuthenticationSuccessHandler {
         val sessionId = session.id
         val hash = generateHash(sessionId)
         session.setAttribute("SESSION_HASH", hash) // Store the hash in the session
-        response.sendRedirect("https://fov.ee")
+        response.sendRedirect(redirectUrl)
     }
 
     private fun generateHash(input: String): String {

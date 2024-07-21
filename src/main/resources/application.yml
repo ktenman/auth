@@ -1,3 +1,6 @@
+redirect:
+  url: ${REDIRECT_URL}
+
 server:
   port: 8083
   error:

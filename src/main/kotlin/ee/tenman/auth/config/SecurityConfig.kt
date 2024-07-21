@@ -1,5 +1,6 @@
 package ee.tenman.auth.config
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -14,6 +15,9 @@ import org.springframework.session.web.http.DefaultCookieSerializer
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
+
+    @Value("\${redirect.url}")
+    private lateinit var redirectUrl: String
 
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -42,7 +46,7 @@ class SecurityConfig {
 
     @Bean
     fun authenticationSuccessHandler(): AuthenticationSuccessHandler {
-        return CustomAuthenticationSuccessHandler()
+        return CustomAuthenticationSuccessHandler(redirectUrl)
     }
 
     @Bean
