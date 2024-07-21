@@ -10,7 +10,7 @@ server:
       force: true
     session:
       timeout: 10080m # 1 week
-  forward-headers-strategy: native  # Add this line here
+  forward-headers-strategy: native
 
 spring:
   security:
