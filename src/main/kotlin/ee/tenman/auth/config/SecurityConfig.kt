@@ -19,6 +19,9 @@ class SecurityConfig {
     @Value("\${redirect.url}")
     private lateinit var redirectUrl: String
 
+    @Value("\${allowed.emails}")
+    private lateinit var allowedEmails: String
+
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
@@ -46,7 +49,8 @@ class SecurityConfig {
 
     @Bean
     fun authenticationSuccessHandler(): AuthenticationSuccessHandler {
-        return CustomAuthenticationSuccessHandler(redirectUrl)
+        val emailsList = allowedEmails.split(",").map { it.trim() }
+        return CustomAuthenticationSuccessHandler(redirectUrl, emailsList)
     }
 
     @Bean

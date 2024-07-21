@@ -1,6 +1,9 @@
 redirect:
   url: ${REDIRECT_URI}
 
+allowed:
+  emails: ${ALLOWED_EMAILS}
+
 server:
   port: 8083
   error:
