@@ -3,6 +3,7 @@ package ee.tenman.auth.controller
 import ee.tenman.auth.service.SessionHashService
 import jakarta.servlet.http.HttpSession
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Controller
@@ -12,7 +13,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 @Controller
 class LoginController(
-    private val sessionHashService: SessionHashService
+    private val sessionHashService: SessionHashService,
+    @Value("\${redirect.url}") private val redirectUrl: String
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -34,7 +36,7 @@ class LoginController(
 
         sessionHashService.generateAndStoreHash(session)
 
-        return "redirect:https://fov.ee"
+        return "redirect:$redirectUrl"
     }
 
     @GetMapping("/error")
