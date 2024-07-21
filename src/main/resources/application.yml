@@ -15,7 +15,13 @@ server:
       enabled: true
       force: true
     session:
-      timeout: 10080m # 1 week
+      store-type: redis
+      redis:
+        namespace: spring:session  # Optional: defines a namespace for session keys
+      cookie:
+        max-age: 604800 # 7 days in seconds
+        http-only: true
+        secure: true
   forward-headers-strategy: native
 
 spring:

@@ -1,20 +1,30 @@
 package ee.tenman.auth.config
 
+import ee.tenman.auth.repository.RedisPersistentTokenRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
+import org.springframework.security.web.authentication.RememberMeServices
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository
 import org.springframework.session.web.http.CookieSerializer
 import org.springframework.session.web.http.DefaultCookieSerializer
+import java.util.*
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
+class SecurityConfig(
+    private val redisConnectionFactory: RedisConnectionFactory,
+    private val userDetailsService: UserDetailsService
+) {
 
     @Value("\${redirect.url}")
     private lateinit var redirectUrl: String
@@ -44,6 +54,10 @@ class SecurityConfig {
                     .deleteCookies("JSESSIONID")
                     .permitAll()
             }
+            .rememberMe { rememberMe ->
+                rememberMe
+                    .rememberMeServices(rememberMeServices())
+            }
         return http.build()
     }
 
@@ -66,6 +80,26 @@ class SecurityConfig {
         val serializer = DefaultCookieSerializer()
         serializer.setSameSite("None")
         serializer.setUseSecureCookie(true)
+        serializer.setCookieName("AUTHSESSION")
+        serializer.setCookieMaxAge(604800) // 7 days
         return serializer
+    }
+
+    @Bean
+    fun persistentTokenRepository(): PersistentTokenRepository {
+        return RedisPersistentTokenRepository(redisConnectionFactory)
+    }
+
+    @Bean
+    fun rememberMeServices(): RememberMeServices {
+        val key = UUID.randomUUID().toString() // Generate a random key
+        return PersistentTokenBasedRememberMeServices(
+            key,
+            userDetailsService,
+            persistentTokenRepository()
+        ).apply {
+            setTokenValiditySeconds(604800) // 7 days
+            setParameter("remember-me")
+        }
     }
 }

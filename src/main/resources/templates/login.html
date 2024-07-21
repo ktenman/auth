@@ -7,9 +7,24 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container d-flex justify-content-center align-items-center vh-100">
+<div class="container d-flex flex-column justify-content-center align-items-center vh-100">
+    <div class="text-center mb-4">
+        <h2>Welcome</h2>
+        <p>Please sign in to continue</p>
+    </div>
     <div class="text-center">
-        <a class="btn btn-primary btn-lg" href="/oauth2/authorization/google">Login with Google</a>
+        <form action="/oauth2/authorization/google" method="get">
+            <div class="form-check mb-3">
+                <input checked class="form-check-input" id="remember-me" name="remember-me" type="checkbox">
+                <label class="form-check-label" for="remember-me">
+                    Remember me
+                </label>
+            </div>
+            <button class="btn btn-primary btn-lg" type="submit">
+                <img alt="Google" class="mr-2" height="20" src="https://www.google.com/favicon.ico" width="20">
+                Login with Google
+            </button>
+        </form>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
