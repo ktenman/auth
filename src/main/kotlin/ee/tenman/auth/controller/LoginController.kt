@@ -1,4 +1,7 @@
 package ee.tenman.auth.controller
+
+import ee.tenman.auth.service.SessionHashService
+import jakarta.servlet.http.HttpSession
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Controller
@@ -6,7 +9,7 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
-class LoginController {
+class LoginController(private val sessionHashService: SessionHashService) {
 
     @GetMapping("/")
     fun home(): String = "home"
@@ -15,9 +18,12 @@ class LoginController {
     fun login(): String = "login"
 
     @GetMapping("/dashboard")
-    fun dashboard(model: Model, authentication: Authentication): String {
+    fun dashboard(model: Model, authentication: Authentication, session: HttpSession): String {
         val userName = (authentication.principal as OAuth2User).attributes["name"] as String
         model.addAttribute("userName", userName)
+
+        sessionHashService.generateAndStoreHash(session)
+
         return "dashboard"
     }
 

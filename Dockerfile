@@ -17,6 +17,6 @@ COPY --from=build /app/build/libs/*.jar /app/app.jar
 ENV JAVA_OPTS="-Xms512m -Xmx1024m -Duser.timezone=Europe/Tallinn"
 ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=80"
 
-ENV SERVER_PORT=8082
+ENV SERVER_PORT=8083
 
 CMD ["sh", "-c", "java $JAVA_OPTS -Dserver.port=$SERVER_PORT -jar /app/app.jar"]
