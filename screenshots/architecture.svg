@@ -1,0 +1,348 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" contentStyleType="text/css"
+     height="884px" preserveAspectRatio="none" style="width:629px;height:884px;background:#FFFFFF;" version="1.1"
+     viewBox="0 0 629 884" width="629px" zoomAndPan="magnify">
+    <defs/>
+    <g><!--cluster auth_system-->
+        <g id="cluster_auth_system">
+            <rect fill="none" height="518.02" rx="2.5" ry="2.5"
+                  style="stroke:#444444;stroke-width:1.0;stroke-dasharray:7.0,7.0;" width="397" x="7" y="201.22"/>
+            <text fill="#444444" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing"
+                  textLength="206.2031" x="102.3984" y="218.0716">Authentication System
+            </text>
+            <text fill="#444444" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="60.9551" x="175.0225" y="232.9837">[System]
+            </text>
+        </g><!--entity frontend-->
+        <g id="elem_frontend">
+            <rect fill="#438DD5" height="85.1875" rx="2.5" ry="2.5" style="stroke:#3C7FC0;stroke-width:0.5;"
+                  width="185.1768" x="106.41" y="252.22"/>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing"
+                  textLength="82.5469" x="157.7249" y="277.0716">Frontend
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="72.7676" x="162.6146" y="291.9837">[Thymeleaf]
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="196.7733" y="307.8089">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="59.7324"
+                  x="116.41" y="324.1057">Provides
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="176.1424" y="324.1057">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="34.1045"
+                  x="180.5926" y="324.1057">login
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="214.6971" y="324.1057">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="62.4395"
+                  x="219.1473" y="324.1057">interface
+            </text>
+        </g><!--entity backend-->
+        <g id="elem_backend">
+            <rect fill="#438DD5" height="101.4844" rx="2.5" ry="2.5" style="stroke:#3C7FC0;stroke-width:0.5;"
+                  width="182.8867" x="191.56" y="426.4"/>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing"
+                  textLength="76.8125" x="244.5971" y="451.2516">Backend
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="43.4063" x="222.3325" y="466.1637">[Spring
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="3.8145" x="265.7387" y="466.1637">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="31.4355" x="269.5532" y="466.1637">Boot,
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="3.8145" x="300.9887" y="466.1637">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="38.8711" x="304.8032" y="466.1637">Kotlin]
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="280.7783" y="481.9889">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="56.6631"
+                  x="201.56" y="498.2857">Handles
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="258.2231" y="498.2857">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="101.7734"
+                  x="262.6733" y="498.2857">authentication
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="32.9287"
+                  x="266.539" y="514.5826">logic
+            </text>
+        </g><!--entity redis-->
+        <g id="elem_redis">
+            <rect fill="#438DD5" height="85.1875" rx="2.5" ry="2.5" style="stroke:#3C7FC0;stroke-width:0.5;"
+                  width="206.375" x="110.81" y="618.05"/>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing"
+                  textLength="69.2891" x="152.1147" y="642.9016">Session
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing"
+                  textLength="5.5703" x="221.4038" y="642.9016">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing"
+                  textLength="48.9063" x="226.9741" y="642.9016">Store
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="42.2871" x="192.8539" y="657.8137">[Redis]
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="211.7724" y="673.6389">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="44.6045"
+                  x="120.81" y="689.9357">Stores
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="165.4145" y="689.9357">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="51.8232"
+                  x="169.8647" y="689.9357">session
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="221.6879" y="689.9357">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81.0469"
+                  x="226.1381" y="689.9357">information
+            </text>
+        </g><!--entity user-->
+        <g id="elem_user">
+            <rect fill="#08427B" height="119.2188" rx="2.5" ry="2.5" style="stroke:#073B6F;stroke-width:0.5;"
+                  width="208.6377" x="94.68" y="7"/>
+            <image height="48" width="48" x="174.9988"
+                   xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAACMElEQVR4Xu2YvUrFQBCFb+kj+Ai+gq3Y2PgA+gCCtZ2V2AhqaSNiqY1gYWMjaCvXykoEKy21sLCNfELgMscksz8mWfDAB3Kuye7sTmYnmcwtbU9KRozSECOVla3T6uTqvrqZPlcPT68/XNw+VtvH19XC+sGe/f9UxIhl8/Cy+vj8qrpEYIsbR1N7fSxihDK/urvMKoeKHbH3ikGMEJi8Z9WbtH92lxyEGCHErLwVqWfvG4IYXkiBXGIn7f29iOGBAe0kUkTVsmN4EcMD255bdgwvYnigFOYW54cdx4MYHlIqT5Niy6oYHuzgORRbUsXwYAfPoV4DeHl7t+MnK/Y8EMMDzVlu9foQ5y6jFAU7hhcxvOSsRLH5D2J4KbqVqMlxoK3tnEevPogRAiuXUpFiD69ZxIghZidSV75GjFiYkGc3KMEpOW8RIxXed0kNJsrOAO0ypTfnxGvEKA0xSkMMD3zfIedJFQ4hCPlUwrX1daQWbURseonRBhNue1D5rc53JkVQwN9c21Wt+D20JxLjN7hpztahSwTi3RExLDlbhhCxm55PkWLMkrvrDBW73rUTYtSQu/aGQ4h0snNzBdD1wPWptrZDDBjL6tfiebBzbA2AUjg2NT3QYkBbrR9KTS/9YoC9eAxqeu0UI/eH21yiu7VzLSqApnIqxn8Af6TiA3A/A9Bn5+lV0xcMMWDoJs6qrakTo4a6OwZxqLa97YkxC1HzMkMzNQRtE3cFUAJilMY3OGTNL0NDLqIAAAAASUVORK5CYII="
+                   y="17"/>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing"
+                  textLength="41.2578" x="178.3699" y="79.8516">User
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="196.7738" y="96.6201">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="26.6055"
+                  x="104.68" y="112.917">End
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="131.2855" y="112.917">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="30.5361"
+                  x="135.7357" y="112.917">user
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="166.2718" y="112.917">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="13.4941"
+                  x="170.722" y="112.917">of
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="184.2161" y="112.917">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="22.9756"
+                  x="188.6663" y="112.917">the
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="211.6419" y="112.917">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="77.2256"
+                  x="216.0921" y="112.917">application
+            </text>
+        </g><!--entity google-->
+        <g id="elem_google">
+            <rect fill="#999999" height="87.5156" rx="2.5" ry="2.5" style="stroke:#8A8A8A;stroke-width:0.5;"
+                  width="185.9561" x="420.02" y="616.89"/>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing"
+                  textLength="62.9063" x="444.9863" y="641.7416">Google
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing"
+                  textLength="5.5703" x="507.8926" y="641.7416">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing"
+                  textLength="67.5469" x="513.4629" y="641.7416">OAuth2
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="510.7729" y="658.5101">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="59.7324"
+                  x="430.02" y="674.807">Provides
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+                  x="489.7524" y="674.807">&#160;
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="101.7734"
+                  x="494.2026" y="674.807">authentication
+            </text>
+            <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="50.1484"
+                  x="487.9238" y="691.1039">service
+            </text>
+        </g><!--link user to frontend-->
+        <g id="link_user_frontend">
+            <path d="M199,126.45 C199,165.85 199,208.77 199,244.04 " fill="none" id="user-to-frontend"
+                  style="stroke:#666666;stroke-width:1.0;"/>
+            <polygon fill="#666666" points="199,252.04,202,244.04,196,244.04,199,252.04"
+                     style="stroke:#666666;stroke-width:1.0;"/>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="61.2188" x="200" y="168.3587">Accesses
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="47.9004" x="206.6592" y="182.3274">[HTTPS]
+            </text>
+        </g><!--link frontend to backend-->
+        <g id="link_frontend_backend">
+            <path d="M106.17,323.87 C66.22,341 33.12,365.57 55,396.4 C85.82,439.84 134.3144,458.3397 183.2744,467.4297 "
+                  fill="none" id="frontend-to-backend" style="stroke:#666666;stroke-width:1.0;"/>
+            <polygon fill="#666666" points="191.14,468.89,183.822,464.4801,182.7268,470.3793,191.14,468.89"
+                     style="stroke:#666666;stroke-width:1.0;"/>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="64.1309" x="106.8008" y="379.5387">Redirects
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="4.1777" x="170.9316" y="379.5387">&#160;
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="13.9805" x="175.1094" y="379.5387">to
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="183.8906" x="56" y="393.5074">[/oauth2/authorization/google]
+            </text>
+        </g><!--link backend to frontend-->
+        <g id="link_backend_frontend">
+            <path d="M267.54,425.96 C261.11,407.21 253.04,385.98 244,367.4 C239.18,357.5 237.5276,354.0703 231.6476,344.5303 "
+                  fill="none" id="backend-to-frontend" style="stroke:#666666;stroke-width:1.0;"/>
+            <polygon fill="#666666" points="227.45,337.72,229.0937,346.1044,234.2014,342.9562,227.45,337.72"
+                     style="stroke:#666666;stroke-width:1.0;"/>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="64.1309" x="267.7666" y="379.5387">Redirects
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="4.1777" x="331.8975" y="379.5387">&#160;
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="13.9805" x="336.0752" y="379.5387">to
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="73.0137" x="257" y="393.5074">configured
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="4.1777" x="330.0137" y="393.5074">&#160;
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="26.6309" x="334.1914" y="393.5074">URL
+            </text>
+        </g><!--link backend to google-->
+        <g id="link_backend_google">
+            <path d="M374.57,499.71 C409.46,511.85 447.22,530.3 474,557.89 C489.49,573.84 496.7615,588.8909 502.4915,608.8409 "
+                  fill="none" id="backend-to-google" style="stroke:#666666;stroke-width:1.0;"/>
+            <polygon fill="#666666" points="504.7,616.53,505.375,608.0127,499.6081,609.669,504.7,616.53"
+                     style="stroke:#666666;stroke-width:1.0;"/>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="94.8691" x="493" y="570.0287">Authenticates
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="4.1777" x="587.8691" y="570.0287">&#160;
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="29.4785" x="592.0469" y="570.0287">with
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="54.5684" x="529.9785" y="583.9974">[OAuth2]
+            </text>
+        </g><!--link google to backend-->
+        <g id="link_google_backend">
+            <path d="M419.85,621.64 C385.61,607.13 353.53,592.69 347,586.89 C328.98,570.89 318.3124,555.6721 307.8024,535.4021 "
+                  fill="none" id="google-to-backend" style="stroke:#666666;stroke-width:1.0;"/>
+            <polygon fill="#666666" points="304.12,528.3,305.1392,536.783,310.4657,534.0212,304.12,528.3"
+                     style="stroke:#666666;stroke-width:1.0;"/>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="53.2617" x="348" y="577.0287">Returns
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="4.1777" x="401.2617" y="577.0287">&#160;
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="29.7422" x="405.4395" y="577.0287">user
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="4.1777" x="435.1816" y="577.0287">&#160;
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="26.1211" x="439.3594" y="577.0287">info
+            </text>
+        </g><!--link backend to redis-->
+        <g id="link_backend_redis">
+            <path d="M228.43,527.98 C221.31,537.18 215.08,547.27 211,557.89 C203.77,576.69 202.7231,590.975 204.7331,609.855 "
+                  fill="none" id="backend-to-redis" style="stroke:#666666;stroke-width:1.0;"/>
+            <polygon fill="#666666" points="205.58,617.81,207.7162,609.5374,201.7499,610.1725,205.58,617.81"
+                     style="stroke:#666666;stroke-width:1.0;"/>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="43.8223" x="212" y="570.0287">Stores
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="4.1777" x="255.8223" y="570.0287">&#160;
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing"
+                  textLength="50.4668" x="260" y="570.0287">session
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="37.6055" x="213.5762" y="583.9974">[Redis
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="3.8145" x="251.1816" y="583.9974">&#160;
+            </text>
+            <text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing"
+                  textLength="53.8945" x="254.9961" y="583.9974">protocol]
+            </text>
+        </g>
+        <text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing"
+              textLength="57.9209" x="460.7402" y="756.2351">Legend
+        </text>
+        <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4.4502"
+              x="518.6611" y="756.2351">&#160;
+        </text>
+        <rect fill="#08427B" height="16.2969" style="stroke:none;stroke-width:1.0;" width="137.7852" x="460.7402"
+              y="759.5369"/>
+        <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="47.9883"
+              x="465.1904" y="772.532">person
+        </text>
+        <rect fill="#1168BD" height="16.2969" style="stroke:none;stroke-width:1.0;" width="137.7852" x="460.7402"
+              y="775.8338"/>
+        <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="50.6133"
+              x="465.1904" y="788.8289">system
+        </text>
+        <rect fill="#438DD5" height="16.2969" style="stroke:none;stroke-width:1.0;" width="137.7852" x="460.7402"
+              y="792.1306"/>
+        <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="66.3359"
+              x="465.1904" y="805.1257">container
+        </text>
+        <rect fill="#686868" height="16.2969" style="stroke:none;stroke-width:1.0;" width="137.7852" x="460.7402"
+              y="808.4275"/>
+        <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="110.5371"
+              x="465.1904" y="821.4226">external person
+        </text>
+        <rect fill="#999999" height="16.2969" style="stroke:none;stroke-width:1.0;" width="137.7852" x="460.7402"
+              y="824.7244"/>
+        <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="113.1621"
+              x="465.1904" y="837.7195">external system
+        </text>
+        <rect fill="#B3B3B3" height="16.2969" style="stroke:none;stroke-width:1.0;" width="137.7852" x="460.7402"
+              y="841.0213"/>
+        <text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="128.8848"
+              x="465.1904" y="854.0164">external container
+        </text>
+        <line style="stroke:#FFFFFF;stroke-width:1.0;" x1="460.7402" x2="598.5254" y1="743.24" y2="743.24"/>
+        <line style="stroke:#FFFFFF;stroke-width:1.0;" x1="460.7402" x2="598.5254" y1="759.5369" y2="759.5369"/>
+        <line style="stroke:#FFFFFF;stroke-width:1.0;" x1="460.7402" x2="598.5254" y1="775.8338" y2="775.8338"/>
+        <line style="stroke:#FFFFFF;stroke-width:1.0;" x1="460.7402" x2="598.5254" y1="792.1306" y2="792.1306"/>
+        <line style="stroke:#FFFFFF;stroke-width:1.0;" x1="460.7402" x2="598.5254" y1="808.4275" y2="808.4275"/>
+        <line style="stroke:#FFFFFF;stroke-width:1.0;" x1="460.7402" x2="598.5254" y1="824.7244" y2="824.7244"/>
+        <line style="stroke:#FFFFFF;stroke-width:1.0;" x1="460.7402" x2="598.5254" y1="841.0213" y2="841.0213"/>
+        <line style="stroke:#FFFFFF;stroke-width:1.0;" x1="460.7402" x2="598.5254" y1="857.3181" y2="857.3181"/>
+        <line style="stroke:#FFFFFF;stroke-width:1.0;" x1="460.7402" x2="460.7402" y1="743.24" y2="857.3181"/>
+        <line style="stroke:#FFFFFF;stroke-width:1.0;" x1="598.5254" x2="598.5254" y1="743.24"
+              y2="857.3181"/><!--SRC=[PLDDZvim4BtpArnEHDeDqggdtf9jTbCrxKRvKDKJSem1Quq7sSDkqwh_lJF0iYJb06PuxysRP_F1E6NRN8iAiGcVqjJBrtbfi6fFRT1UWKFjSAwWJXih7RQrlGsOMtDAxp_URhbq_BP9QnbGUofbzyIGnca_RmWRHPl5pwVZ8VlnvR3EDgl7rVVFoIoAjje7S0ctk17naHunFLSk5rmIK0Yij91DOusIQC35HDgVgKcTBQ5rkVJdHBPOPQ4h4db1RsHrm8iU7C_4dqZGDTfA2j_Db1FbOLXoxqDrhhNLik2NhOSNa-iWB9J62KCeNqYboSMbs4cgvrvhsQ-OlM-ySQLO0k2D-0feZUFoMhhSagQyDCejr7_2NkSci9OEeHi7mMjMsV67hWjNWWW3mBW2VFsMrTynhTKlJ4g0qchYF7OBySHPtLqCUcMADk75TFD6Ess7VPeajr2A-khEoFfmsEu9oS1to7ioxDXhXK4WC3u5RdQNyXsy-TrrJ7kFWyn87frFTfVSlj81PQbXa9xqXfrsnjQxq9yf3kXQVapv8iinPj5uG51WhtcJ9ARJ2VfT2bEs92kEkqqy-mS0]-->
+    </g>
+</svg>
