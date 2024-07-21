@@ -100,6 +100,7 @@ class SecurityConfig(
             persistentTokenRepository()
         ).apply {
             setTokenValiditySeconds(604800) // 7 days
+            setUseSecureCookie(true)
             setParameter("remember-me")
         }
     }
