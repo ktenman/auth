@@ -103,7 +103,7 @@ The application includes a Dockerfile for easy containerization. To build and ru
     docker run -p 8083:8083 -e GOOGLE_CLIENT_ID=your_client_id -e GOOGLE_CLIENT_SECRET=your_client_secret -e REDIRECT_URI=your_redirect_uri -e ALLOWED_EMAILS=allowed@email.com auth-service
     ```
 
---
+---
 
 This README provides a comprehensive overview of the authentication service, including its features, setup instructions,
 and deployment guidelines, without the PlantUML diagram.
