@@ -10,18 +10,16 @@ server:
     whitelabel:
       enabled: false
   servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
     session:
-      store-type: redis
-      redis:
-        namespace: spring:session  # Optional: defines a namespace for session keys
+      timeout: 10080m # 1 week
       cookie:
         max-age: 604800 # 7 days in seconds
         http-only: true
         secure: true
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
   forward-headers-strategy: native
 
 spring:
@@ -46,6 +44,12 @@ spring:
       port: 6379
   session:
     store-type: redis
+    redis:
+      namespace: spring:session  # Optional: defines a namespace for session keys
+    cookie:
+      max-age: 604800 # 7 days in seconds
+      http-only: true
+      secure: true
 
 logging:
   level:
