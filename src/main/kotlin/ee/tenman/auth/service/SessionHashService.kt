@@ -1,11 +1,22 @@
 package ee.tenman.auth.service
 
+import jakarta.annotation.PostConstruct
 import jakarta.servlet.http.HttpSession
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.security.MessageDigest
 
+
 @Service
 class SessionHashService {
+
+    private val log = LoggerFactory.getLogger(javaClass)
+
+    @PostConstruct
+    fun init() {
+        log.info("GOOGLE_CLIENT_ID: " + System.getenv("GOOGLE_CLIENT_ID"))
+        log.info("GOOGLE_CLIENT_SECRET: " + System.getenv("GOOGLE_CLIENT_SECRET"))
+    }
 
     fun generateAndStoreHash(session: HttpSession) {
         val sessionId = session.id
