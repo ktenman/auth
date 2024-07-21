@@ -34,7 +34,7 @@ class LoginController(
 
         sessionHashService.generateAndStoreHash(session)
 
-        return "redirect:https://fov.ee/#"
+        return "redirect:https://fov.ee"
     }
 
     @GetMapping("/error")

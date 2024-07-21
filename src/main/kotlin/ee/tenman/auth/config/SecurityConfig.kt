@@ -6,7 +6,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler
 import org.springframework.session.web.http.CookieSerializer
@@ -28,7 +27,6 @@ class SecurityConfig {
             .oauth2Login { oauth2 ->
                 oauth2
                     .loginPage("/login")
-                    .defaultSuccessUrl("/dashboard", true)
                     .successHandler(authenticationSuccessHandler())
             }
             .logout { logout ->
@@ -44,10 +42,7 @@ class SecurityConfig {
 
     @Bean
     fun authenticationSuccessHandler(): AuthenticationSuccessHandler {
-        val handler = SimpleUrlAuthenticationSuccessHandler()
-        handler.setDefaultTargetUrl("https://fov.ee/#")
-        handler.setAlwaysUseDefaultTargetUrl(true)
-        return handler
+        return CustomAuthenticationSuccessHandler()
     }
 
     @Bean

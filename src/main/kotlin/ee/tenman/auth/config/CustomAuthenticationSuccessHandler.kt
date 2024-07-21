@@ -1,12 +1,12 @@
 package ee.tenman.auth.config
 
+import jakarta.servlet.ServletException
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.stereotype.Component
 import java.io.IOException
-import jakarta.servlet.ServletException
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
 import java.security.MessageDigest
 
 @Component
@@ -21,7 +21,7 @@ class CustomAuthenticationSuccessHandler : AuthenticationSuccessHandler {
         val sessionId = session.id
         val hash = generateHash(sessionId)
         session.setAttribute("SESSION_HASH", hash) // Store the hash in the session
-        response.sendRedirect("/dashboard")
+        response.sendRedirect("https://fov.ee")
     }
 
     private fun generateHash(input: String): String {
@@ -29,4 +29,3 @@ class CustomAuthenticationSuccessHandler : AuthenticationSuccessHandler {
         return bytes.joinToString("") { "%02x".format(it) }
     }
 }
-
