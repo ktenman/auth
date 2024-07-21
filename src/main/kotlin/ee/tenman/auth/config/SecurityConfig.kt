@@ -4,6 +4,7 @@ import ee.tenman.auth.repository.RedisPersistentTokenRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -23,7 +24,7 @@ import java.util.*
 @EnableWebSecurity
 class SecurityConfig(
     private val redisConnectionFactory: RedisConnectionFactory,
-    private val userDetailsService: UserDetailsService
+    @Lazy private val userDetailsService: UserDetailsService
 ) {
 
     @Value("\${redirect.url}")
