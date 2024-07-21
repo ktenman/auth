@@ -2,13 +2,22 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <title>Error</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h1>Oops! Something went wrong</h1>
-<p>We're sorry, but there was an error processing your request.</p>
-<p th:if="${error}" th:text="${error}">Error details</p>
-<p th:if="${status}" th:text="${status}">Status code</p>
-<a href="/">Return to Home</a>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="text-center">
+        <h1 class="mb-4">Oops! Something went wrong</h1>
+        <p>We're sorry, but there was an error processing your request.</p>
+        <p th:if="${error}" th:text="${error}">Error details</p>
+        <p th:if="${status}" th:text="${status}">Status code</p>
+        <a class="btn btn-secondary btn-lg mt-3" href="/">Return to Home</a>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
