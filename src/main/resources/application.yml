@@ -1,8 +1,8 @@
 redirect:
-  url: ${REDIRECT_URI:"YOUR_REDIRECT_URI"}
+  url: ${REDIRECT_URI:YOUR_REDIRECT_URI}
 
 allowed:
-  emails: ${ALLOWED_EMAILS:"YOUR_ALLOWED_EMAILS"}
+  emails: ${ALLOWED_EMAILS:YOUR_ALLOWED_EMAILS}
 
 server:
   port: 8083
