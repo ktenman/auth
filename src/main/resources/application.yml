@@ -1,5 +1,5 @@
 redirect:
-  url: ${REDIRECT_URL}
+  url: ${REDIRECT_URI}
 
 server:
   port: 8083

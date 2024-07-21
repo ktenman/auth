@@ -16,6 +16,7 @@ class SessionHashService {
     fun init() {
         log.info("GOOGLE_CLIENT_ID: " + System.getenv("GOOGLE_CLIENT_ID"))
         log.info("GOOGLE_CLIENT_SECRET: " + System.getenv("GOOGLE_CLIENT_SECRET"))
+        log.info("REDIRECT_URI: " + System.getenv("REDIRECT_URI"))
     }
 
     fun generateAndStoreHash(session: HttpSession) {
