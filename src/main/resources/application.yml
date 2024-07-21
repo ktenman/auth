@@ -26,8 +26,6 @@ spring:
               - profile
   application:
     name: auth
-  redirect:
-    uri: ${spring.security.oauth2.client.registration.google.redirect-uri}
   thymeleaf:
     cache: false
   data:
