@@ -2,6 +2,7 @@ package ee.tenman.auth.controller
 
 import ee.tenman.auth.service.SessionHashService
 import jakarta.servlet.http.HttpSession
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Controller
@@ -9,7 +10,10 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 
 @Controller
-class LoginController(private val sessionHashService: SessionHashService) {
+class LoginController(
+    private val sessionHashService: SessionHashService,
+    @Value("\${spring.redirect.uri}") private val redirectUri: String
+) {
 
     @GetMapping("/")
     fun home(): String = "home"
@@ -32,5 +36,11 @@ class LoginController(private val sessionHashService: SessionHashService) {
         model.addAttribute("error", "An error occurred")
         model.addAttribute("status", "404")
         return "error"
+    }
+
+    @GetMapping("/login/oauth2/code/google")
+    fun handleGoogleCallback(): String {
+        println("Redirect URI: $redirectUri")
+        return "redirect:$redirectUri"
     }
 }
