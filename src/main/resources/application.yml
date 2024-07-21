@@ -10,6 +10,7 @@ server:
       force: true
     session:
       timeout: 10080m # 1 week
+  forward-headers-strategy: native  # Add this line here
 
 spring:
   security:
@@ -19,15 +20,14 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_SECRET}
-            redirect-uri: "{baseUrl}/login/oauth2/code/google"
+            redirect-uri: "https://fov.ee/login/oauth2/code/google"
             scope:
               - email
               - profile
   application:
     name: auth
   redirect:
-    uri: https://fov.ee/login/oauth2/code/google
-
+    uri: ${spring.security.oauth2.client.registration.google.redirect-uri}
   thymeleaf:
     cache: false
   data:
@@ -42,4 +42,3 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
     ee.tenman.auth: DEBUG
-
