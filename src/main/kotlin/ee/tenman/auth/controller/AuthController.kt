@@ -42,6 +42,7 @@ class AuthController(
         return if (email != null && allowedEmails.contains(email) && sessionHashService.validateHash(session)) {
             val sessionId = session.id
             val hash = sessionHashService.getStoredHash(session)!!
+            log.info("Session validated for email: $email")
             ResponseEntity.ok(mapOf("sessionId" to sessionId, "hash" to hash))
         } else {
             log.error("Unauthorized session validation attempt by email: $email")
