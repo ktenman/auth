@@ -1,3 +1,9 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
 redirect:
   url: ${REDIRECT_URI:YOUR_REDIRECT_URI}
 

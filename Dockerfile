@@ -14,6 +14,9 @@ WORKDIR /app
 
 COPY --from=build /app/build/libs/*.jar /app/app.jar
 
+# Install curl and necessary libraries in the target stage
+RUN apk update && apk add --no-cache curl libressl nghttp2-libs libssh2 brotli zlib
+
 ENV JAVA_OPTS="-Xms512m -Xmx1024m -Duser.timezone=Europe/Tallinn"
 ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=80"
 
