@@ -59,6 +59,8 @@ spring:
 
 logging:
   level:
-    org.springframework.security: DEBUG
-    org.springframework.web: DEBUG
-    ee.tenman.auth: DEBUG
+    org.springframework.boot.actuate: WARN
+    org.springframework.security: INFO
+    org.springframework.web: INFO
+    ee.tenman.auth: INFO
+

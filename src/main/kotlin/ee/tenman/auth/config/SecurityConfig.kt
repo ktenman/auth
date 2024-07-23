@@ -40,6 +40,8 @@ class SecurityConfig(
                 authorize
                     .requestMatchers("/", "/login", "/logout").permitAll()
                     .requestMatchers("/oauth2/**").permitAll()
+                    .requestMatchers("/actuator/health", "/actuator/info")
+                    .permitAll()  // Allow access to actuator endpoints
                     .anyRequest().authenticated()
             }
             .oauth2Login { oauth2 ->
