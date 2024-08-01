@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.server.ResponseStatusException
 import java.util.*
 
 @RestController
@@ -27,21 +26,13 @@ class AuthController(
     private val log = LoggerFactory.getLogger(javaClass)
 
     @Loggable
-    @GetMapping(
-        "/user",
-        consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE]
-    )
+    @GetMapping("/user", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun user(authentication: Authentication): AuthResponse {
         return handleAuthentication(authentication)
     }
 
     @Loggable
-    @GetMapping(
-        "/user-by-session",
-        consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE]
-    )
+    @GetMapping("/user-by-session", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun userBySession(@RequestParam sessionId: String): AuthResponse {
         log.info("Checking session: $sessionId")
         val decodedSessionId = try {
@@ -100,11 +91,7 @@ class AuthController(
     }
 
     @Loggable
-    @GetMapping(
-        "/validate",
-        consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE]
-    )
+    @GetMapping("/validate", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun validateSession(authentication: Authentication): ResponseEntity<Map<String, String>> {
         log.info("Validating session")
         val email = (authentication.principal as? OAuth2User)?.attributes?.get("email") as? String
@@ -112,7 +99,8 @@ class AuthController(
 
         if (!allowedEmails.contains(email)) {
             log.error("Unauthorized session validation attempt by email: $email")
-            throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized: Session validation failed")
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(mapOf("error" to "Unauthorized: Session validation failed"))
         }
 
         log.info("Session validated for email: $email")
