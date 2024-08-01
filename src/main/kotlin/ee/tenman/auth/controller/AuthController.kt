@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
@@ -25,6 +26,24 @@ class AuthController(
 
     @GetMapping("/user")
     fun user(authentication: Authentication): ResponseEntity<AuthResponse> {
+        return handleAuthentication(authentication)
+    }
+
+    @GetMapping("/user-by-session")
+    fun userBySession(@RequestParam sessionId: String, session: HttpSession): ResponseEntity<AuthResponse> {
+        if (session.id != sessionId || !sessionHashService.validateHash(session)) {
+            log.error("Invalid session ID or hash for session: $sessionId")
+            return createUnauthorizedResponse("Invalid session")
+        }
+
+        val authentication = session.getAttribute("SPRING_SECURITY_CONTEXT")?.let {
+            (it as org.springframework.security.core.context.SecurityContext).authentication
+        } ?: return createUnauthorizedResponse("No authentication found")
+
+        return handleAuthentication(authentication)
+    }
+
+    private fun handleAuthentication(authentication: Authentication): ResponseEntity<AuthResponse> {
         if (authentication !is OAuth2AuthenticationToken) {
             return createUnauthorizedResponse("Invalid authentication type")
         }
@@ -37,7 +56,7 @@ class AuthController(
             return createUnauthorizedResponse("User not authorized")
         }
 
-        log.info("User $email logged in successfully")
+        log.info("User $email authenticated successfully")
         return ResponseEntity.ok(createAuthorizedResponse(email, principal, authentication))
     }
 
