@@ -1,5 +1,6 @@
 package ee.tenman.auth.controller
 
+import ee.tenman.auth.config.aspect.Loggable
 import ee.tenman.auth.model.AuthResponse
 import ee.tenman.auth.model.AuthStatus
 import ee.tenman.auth.model.UserInfo
@@ -24,11 +25,13 @@ class AuthController(
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
+    @Loggable
     @GetMapping("/user")
     fun user(authentication: Authentication): ResponseEntity<AuthResponse> {
         return handleAuthentication(authentication)
     }
 
+    @Loggable
     @GetMapping("/user-by-session")
     fun userBySession(@RequestParam sessionId: String): ResponseEntity<AuthResponse> {
         log.info("Checking session: $sessionId")
@@ -90,6 +93,7 @@ class AuthController(
         )
     }
 
+    @Loggable
     @GetMapping("/validate")
     fun validateSession(authentication: Authentication): ResponseEntity<Map<String, String>> {
         log.info("Validating session")
