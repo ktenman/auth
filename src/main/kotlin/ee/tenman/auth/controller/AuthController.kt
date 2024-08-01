@@ -32,7 +32,7 @@ class AuthController(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun user(authentication: Authentication): ResponseEntity<AuthResponse> {
+    fun user(authentication: Authentication): AuthResponse {
         return handleAuthentication(authentication)
     }
 
@@ -42,7 +42,7 @@ class AuthController(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun userBySession(@RequestParam sessionId: String): ResponseEntity<AuthResponse> {
+    fun userBySession(@RequestParam sessionId: String): AuthResponse {
         log.info("Checking session: $sessionId")
         val decodedSessionId = try {
             String(Base64.getDecoder().decode(sessionId))
@@ -57,7 +57,7 @@ class AuthController(
         return handleAuthentication(authentication)
     }
 
-    private fun handleAuthentication(authentication: Authentication): ResponseEntity<AuthResponse> {
+    private fun handleAuthentication(authentication: Authentication): AuthResponse {
         if (authentication !is OAuth2AuthenticationToken) {
             return createUnauthorizedResponse("Invalid authentication type")
         }
@@ -71,17 +71,14 @@ class AuthController(
         }
 
         log.info("User $email authenticated successfully")
-        return ResponseEntity.ok(createAuthorizedResponse(email, principal, authentication))
+        return createAuthorizedResponse(email, principal, authentication)
     }
 
-    private fun createUnauthorizedResponse(message: String): ResponseEntity<AuthResponse> {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-            AuthResponse(
-                status = AuthStatus.UNAUTHORIZED,
-                message = message
-            )
+    private fun createUnauthorizedResponse(message: String): AuthResponse =
+        AuthResponse(
+            status = AuthStatus.UNAUTHORIZED,
+            message = message
         )
-    }
 
     private fun createAuthorizedResponse(
         email: String,
