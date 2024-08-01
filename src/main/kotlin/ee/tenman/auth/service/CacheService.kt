@@ -30,5 +30,6 @@ class CacheService(
             log.error("Failed to save authentication for sessionId: $sessionId", e)
         }
     }
+
 }
 

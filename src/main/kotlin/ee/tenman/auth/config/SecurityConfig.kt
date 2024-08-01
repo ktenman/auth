@@ -40,10 +40,10 @@ class SecurityConfig(
         http
             .authorizeHttpRequests { authorize ->
                 authorize
-                    .requestMatchers("/", "/login", "/logout").permitAll()
+                    .requestMatchers("/login", "/logout").permitAll()
                     .requestMatchers("/oauth2/**").permitAll()
-                    .requestMatchers("/actuator/health", "/actuator/info")
-                    .permitAll()
+                    .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                    .requestMatchers("/home").authenticated()
                     .anyRequest().authenticated()
             }
             .oauth2Login { oauth2 ->
