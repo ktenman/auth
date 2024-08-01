@@ -3,8 +3,7 @@ package ee.tenman.auth.controller
 import ee.tenman.auth.model.AuthResponse
 import ee.tenman.auth.model.AuthStatus
 import ee.tenman.auth.model.UserInfo
-import ee.tenman.auth.service.SessionHashService
-import jakarta.servlet.http.HttpSession
+import ee.tenman.auth.service.CacheService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
@@ -16,10 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
+import java.util.*
 
 @RestController
 class AuthController(
-    private val sessionHashService: SessionHashService,
+    private val cacheService: CacheService,
     @Value("\${allowed.emails}") private val allowedEmails: List<String>
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
@@ -30,15 +30,16 @@ class AuthController(
     }
 
     @GetMapping("/user-by-session")
-    fun userBySession(@RequestParam sessionId: String, session: HttpSession): ResponseEntity<AuthResponse> {
-        if (session.id != sessionId || !sessionHashService.validateHash(session)) {
-            log.error("Invalid session ID or hash for session: $sessionId")
-            return createUnauthorizedResponse("Invalid session")
+    fun userBySession(@RequestParam sessionId: String): ResponseEntity<AuthResponse> {
+        val decodedSessionId = try {
+            String(Base64.getDecoder().decode(sessionId))
+        } catch (e: IllegalArgumentException) {
+            log.error("Invalid base64 sessionId: $sessionId")
+            return createUnauthorizedResponse("Invalid session ID")
         }
 
-        val authentication = session.getAttribute("SPRING_SECURITY_CONTEXT")?.let {
-            (it as org.springframework.security.core.context.SecurityContext).authentication
-        } ?: return createUnauthorizedResponse("No authentication found")
+        val authentication = cacheService.getAuthentication(decodedSessionId)
+            ?: return createUnauthorizedResponse("No authentication found for session")
 
         return handleAuthentication(authentication)
     }
@@ -89,16 +90,16 @@ class AuthController(
     }
 
     @GetMapping("/validate")
-    fun validateSession(authentication: Authentication, session: HttpSession): ResponseEntity<Map<String, String>> {
+    fun validateSession(authentication: Authentication): ResponseEntity<Map<String, String>> {
         val email = (authentication.principal as? OAuth2User)?.attributes?.get("email") as? String
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "Invalid authentication"))
 
-        if (!allowedEmails.contains(email) || !sessionHashService.validateHash(session)) {
+        if (!allowedEmails.contains(email)) {
             log.error("Unauthorized session validation attempt by email: $email")
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized: Session validation failed")
         }
 
         log.info("Session validated for email: $email")
-        return ResponseEntity.ok(mapOf("sessionId" to session.id))
+        return ResponseEntity.ok(mapOf("message" to "Session validated successfully"))
     }
 }

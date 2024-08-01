@@ -1,6 +1,7 @@
 package ee.tenman.auth.config
 
 import ee.tenman.auth.repository.RedisPersistentTokenRepository
+import ee.tenman.auth.service.CacheService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -24,7 +25,8 @@ import java.util.*
 @EnableWebSecurity
 class SecurityConfig(
     private val redisConnectionFactory: RedisConnectionFactory,
-    @Lazy private val userDetailsService: UserDetailsService
+    @Lazy private val userDetailsService: UserDetailsService,
+    private val cacheService: CacheService
 ) {
 
     @Value("\${redirect.url}")
@@ -67,7 +69,7 @@ class SecurityConfig(
     @Bean
     fun authenticationSuccessHandler(): AuthenticationSuccessHandler {
         val emailsList = allowedEmails.split(",").map { it.trim() }
-        return CustomAuthenticationSuccessHandler(redirectUrl, emailsList)
+        return CustomAuthenticationSuccessHandler(redirectUrl, emailsList, cacheService)
     }
 
     @Bean

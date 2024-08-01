@@ -1,7 +1,6 @@
 package ee.tenman.auth.service
 
 import jakarta.annotation.PostConstruct
-import jakarta.servlet.http.HttpSession
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.stereotype.Service
@@ -21,9 +20,8 @@ class SessionHashService {
         log.info("ALLOWED_EMAILS: " + System.getenv("ALLOWED_EMAILS"))
     }
 
-    fun validateHash(session: HttpSession): Boolean {
-        val storedHash = session.getAttribute("SESSION_HASH") as? String ?: return false
-        val currentHash = generateHash(session.id)
+    fun validateHash(sessionId: String, storedHash: String): Boolean {
+        val currentHash = generateHash(sessionId)
         return storedHash == currentHash
     }
 

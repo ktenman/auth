@@ -1,5 +1,6 @@
 package ee.tenman.auth.config
 
+import ee.tenman.auth.service.CacheService
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -12,7 +13,8 @@ import java.security.MessageDigest
 
 class CustomAuthenticationSuccessHandler(
     private val redirectUrl: String,
-    private val allowedEmails: List<String>
+    private val allowedEmails: List<String>,
+    private val cacheService: CacheService
 ) : AuthenticationSuccessHandler {
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -32,6 +34,7 @@ class CustomAuthenticationSuccessHandler(
 
         if (email != null && allowedEmails.contains(email)) {
             log.info("User $email logged in successfully")
+            cacheService.saveAuthentication(sessionId, authentication)
             response.sendRedirect(redirectUrl)
         } else {
             log.error("Not allowed to log in: $email")
