@@ -1,5 +1,8 @@
 package ee.tenman.auth.controller
 
+import ee.tenman.auth.model.AuthResponse
+import ee.tenman.auth.model.AuthStatus
+import ee.tenman.auth.model.UserInfo
 import ee.tenman.auth.service.SessionHashService
 import jakarta.servlet.http.HttpSession
 import org.slf4j.LoggerFactory
@@ -21,31 +24,62 @@ class AuthController(
     private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping("/user")
-    fun user(authentication: Authentication): ResponseEntity<Map<String, Any>> =
-        when (authentication) {
-            is OAuth2AuthenticationToken -> {
-                val email = (authentication.principal.attributes["email"] as String?)
-                if (email != null && allowedEmails.contains(email)) {
-                    log.info("User $email logged in successfully")
-                    ResponseEntity.ok(authentication.principal.attributes)
-                } else {
-                    log.error("Unauthorized access attempt by email: $email")
-                    ResponseEntity(mapOf("error" to "Unauthorized"), HttpStatus.UNAUTHORIZED)
-                }
-            }
-            else -> ResponseEntity(mapOf("error" to "Unauthorized"), HttpStatus.UNAUTHORIZED)
+    fun user(authentication: Authentication): ResponseEntity<AuthResponse> {
+        if (authentication !is OAuth2AuthenticationToken) {
+            return createUnauthorizedResponse("Invalid authentication type")
         }
+
+        val principal = authentication.principal
+        val email = principal.attributes["email"] as String? ?: return createUnauthorizedResponse("Email not found")
+
+        if (!allowedEmails.contains(email)) {
+            log.error("Unauthorized access attempt by email: $email")
+            return createUnauthorizedResponse("User not authorized")
+        }
+
+        log.info("User $email logged in successfully")
+        return ResponseEntity.ok(createAuthorizedResponse(email, principal, authentication))
+    }
+
+    private fun createUnauthorizedResponse(message: String): ResponseEntity<AuthResponse> {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+            AuthResponse(
+                status = AuthStatus.UNAUTHORIZED,
+                message = message
+            )
+        )
+    }
+
+    private fun createAuthorizedResponse(
+        email: String,
+        principal: OAuth2User,
+        authentication: OAuth2AuthenticationToken
+    ): AuthResponse {
+        return AuthResponse(
+            status = AuthStatus.AUTHORIZED,
+            user = UserInfo(
+                email = email,
+                name = principal.attributes["name"] as? String ?: "",
+                givenName = principal.attributes["given_name"] as? String ?: "",
+                familyName = principal.attributes["family_name"] as? String ?: "",
+                picture = principal.attributes["picture"] as? String ?: ""
+            ),
+            authorities = authentication.authorities.map { it.authority },
+            provider = authentication.authorizedClientRegistrationId
+        )
+    }
 
     @GetMapping("/validate")
     fun validateSession(authentication: Authentication, session: HttpSession): ResponseEntity<Map<String, String>> {
-        val email = (authentication.principal as OAuth2User).attributes["email"] as String?
-        return if (email != null && allowedEmails.contains(email) && sessionHashService.validateHash(session)) {
-            val sessionId = session.id
-            log.info("Session validated for email: $email")
-            ResponseEntity.ok(mapOf("sessionId" to sessionId))
-        } else {
+        val email = (authentication.principal as? OAuth2User)?.attributes?.get("email") as? String
+            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "Invalid authentication"))
+
+        if (!allowedEmails.contains(email) || !sessionHashService.validateHash(session)) {
             log.error("Unauthorized session validation attempt by email: $email")
             throw ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized: Session validation failed")
         }
+
+        log.info("Session validated for email: $email")
+        return ResponseEntity.ok(mapOf("sessionId" to session.id))
     }
 }
