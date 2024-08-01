@@ -8,6 +8,7 @@ import ee.tenman.auth.service.CacheService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
@@ -26,13 +27,21 @@ class AuthController(
     private val log = LoggerFactory.getLogger(javaClass)
 
     @Loggable
-    @GetMapping("/user")
+    @GetMapping(
+        "/user",
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun user(authentication: Authentication): ResponseEntity<AuthResponse> {
         return handleAuthentication(authentication)
     }
 
     @Loggable
-    @GetMapping("/user-by-session")
+    @GetMapping(
+        "/user-by-session",
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun userBySession(@RequestParam sessionId: String): ResponseEntity<AuthResponse> {
         log.info("Checking session: $sessionId")
         val decodedSessionId = try {
@@ -94,7 +103,11 @@ class AuthController(
     }
 
     @Loggable
-    @GetMapping("/validate")
+    @GetMapping(
+        "/validate",
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun validateSession(authentication: Authentication): ResponseEntity<Map<String, String>> {
         log.info("Validating session")
         val email = (authentication.principal as? OAuth2User)?.attributes?.get("email") as? String
