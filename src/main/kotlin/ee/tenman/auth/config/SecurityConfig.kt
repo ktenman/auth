@@ -42,7 +42,7 @@ class SecurityConfig(
                 authorize
                     .requestMatchers("/login", "/logout").permitAll()
                     .requestMatchers("/oauth2/**").permitAll()
-                    .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                    .requestMatchers("/actuator/health", "/actuator/info", "/user-by-session").permitAll()
                     .requestMatchers("/home").authenticated()
                     .anyRequest().authenticated()
             }
