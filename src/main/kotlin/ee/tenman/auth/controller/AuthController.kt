@@ -31,6 +31,7 @@ class AuthController(
 
     @GetMapping("/user-by-session")
     fun userBySession(@RequestParam sessionId: String): ResponseEntity<AuthResponse> {
+        log.info("Checking session: $sessionId")
         val decodedSessionId = try {
             String(Base64.getDecoder().decode(sessionId))
         } catch (e: IllegalArgumentException) {
@@ -91,6 +92,7 @@ class AuthController(
 
     @GetMapping("/validate")
     fun validateSession(authentication: Authentication): ResponseEntity<Map<String, String>> {
+        log.info("Validating session")
         val email = (authentication.principal as? OAuth2User)?.attributes?.get("email") as? String
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "Invalid authentication"))
 
