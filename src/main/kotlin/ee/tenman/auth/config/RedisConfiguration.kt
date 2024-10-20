@@ -15,9 +15,9 @@ class RedisConfiguration {
     fun cacheManager(connectionFactory: RedisConnectionFactory): RedisCacheManager {
         val cacheConfigurations: MutableMap<String, RedisCacheConfiguration> = HashMap()
         cacheConfigurations[USER_SESSION_CACHE] =
-            RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(7))
+            RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(30))
         cacheConfigurations[USER_SESSION_ID_CACHE] =
-            RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(7))
+            RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(30))
         val defaultConfig = RedisCacheConfiguration.defaultCacheConfig().entryTtl(DEFAULT_TTL)
         return RedisCacheManager.builder(connectionFactory)
             .cacheDefaults(defaultConfig)

@@ -86,7 +86,7 @@ class SecurityConfig(
         serializer.setSameSite("None")
         serializer.setUseSecureCookie(true)
         serializer.setCookieName("AUTHSESSION")
-        serializer.setCookieMaxAge(604800) // 7 days
+        serializer.setCookieMaxAge(2592000) // 30 days
         return serializer
     }
 
@@ -103,7 +103,7 @@ class SecurityConfig(
             userDetailsService,
             persistentTokenRepository()
         ).apply {
-            setTokenValiditySeconds(604800) // 7 days
+            setTokenValiditySeconds(2592000) // 30 days
             setUseSecureCookie(true)
             setParameter("remember-me")
         }

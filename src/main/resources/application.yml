@@ -17,9 +17,9 @@ server:
       enabled: false
   servlet:
     session:
-      timeout: 10080m # 1 week
+      timeout: 43200m # 30 days in minutes
       cookie:
-        max-age: 604800 # 7 days in seconds
+        max-age: 2592000 # 30 days in seconds
         http-only: true
         secure: true
     encoding:
@@ -53,7 +53,7 @@ spring:
     redis:
       namespace: spring:session  # Optional: defines a namespace for session keys
     cookie:
-      max-age: 604800 # 7 days in seconds
+      max-age: 2592000 # 30 days in seconds
       http-only: true
       secure: true
 

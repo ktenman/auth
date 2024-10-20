@@ -25,9 +25,9 @@ class RedisPersistentTokenRepository(connectionFactory: RedisConnectionFactory) 
     override fun createNewToken(token: PersistentRememberMeToken) {
         val tokenJson = objectMapper.writeValueAsString(token)
         redisTemplate.opsForValue()[tokenPrefix + token.series] = tokenJson
-        redisTemplate.expire(tokenPrefix + token.series, 7, TimeUnit.DAYS)
+        redisTemplate.expire(tokenPrefix + token.series, 30, TimeUnit.DAYS)
         redisTemplate.opsForValue()[usernamePrefix + token.username] = token.series
-        redisTemplate.expire(usernamePrefix + token.username, 7, TimeUnit.DAYS)
+        redisTemplate.expire(usernamePrefix + token.username, 30, TimeUnit.DAYS)
     }
 
     override fun updateToken(series: String, tokenValue: String, lastUsed: Date) {
@@ -36,7 +36,7 @@ class RedisPersistentTokenRepository(connectionFactory: RedisConnectionFactory) 
             val updatedToken = PersistentRememberMeToken(it.username, series, tokenValue, lastUsed)
             val tokenJson = objectMapper.writeValueAsString(updatedToken)
             redisTemplate.opsForValue()[tokenPrefix + series] = tokenJson
-            redisTemplate.expire(tokenPrefix + series, 7, TimeUnit.DAYS)
+            redisTemplate.expire(tokenPrefix + series, 30, TimeUnit.DAYS)
         }
     }
 
