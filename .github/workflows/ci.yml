@@ -50,7 +50,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4.2.2
       - name: Run Gradle test
         run: ./gradlew test --info -x bootJar
-      - uses: actions/upload-artifact@v4.4.3
+      - uses: actions/upload-artifact@v4.5.0
         if: always()
         with:
           name: ${{ format('Test reports and screenshots ({0})', matrix.test-type) }}
