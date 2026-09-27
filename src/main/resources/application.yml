@@ -12,9 +12,6 @@ allowed:
 
 server:
   port: 8083
-  error:
-    whitelabel:
-      enabled: false
   servlet:
     session:
       timeout: 43200m # 30 days in minutes
@@ -22,13 +19,18 @@ server:
         max-age: 2592000 # 30 days in seconds
         http-only: true
         secure: true
+  forward-headers-strategy: native
+
+spring:
+  web:
+    error:
+      whitelabel:
+        enabled: false
+  servlet:
     encoding:
       charset: UTF-8
       enabled: true
       force: true
-  forward-headers-strategy: native
-
-spring:
   security:
     oauth2:
       client:
@@ -50,8 +52,9 @@ spring:
       port: 6379
   session:
     store-type: redis
-    redis:
-      namespace: spring:session  # Optional: defines a namespace for session keys
+    data:
+      redis:
+        namespace: spring:session  # Optional: defines a namespace for session keys
     cookie:
       max-age: 2592000 # 30 days in seconds
       http-only: true

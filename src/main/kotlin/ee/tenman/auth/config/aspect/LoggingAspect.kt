@@ -1,6 +1,6 @@
 package ee.tenman.auth.config.aspect
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import ee.tenman.auth.config.TimeUtility
 import jakarta.annotation.Resource
 import org.aspectj.lang.ProceedingJoinPoint

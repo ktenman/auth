@@ -85,7 +85,7 @@ class AuthController(
                 familyName = principal.attributes["family_name"] as? String ?: "",
                 picture = principal.attributes["picture"] as? String ?: ""
             ),
-            authorities = authentication.authorities.map { it.authority },
+            authorities = authentication.authorities.mapNotNull { it.authority },
             provider = authentication.authorizedClientRegistrationId
         )
     }
