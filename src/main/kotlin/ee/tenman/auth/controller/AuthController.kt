@@ -91,19 +91,21 @@ class AuthController(
     }
 
     @Loggable
-    @GetMapping("/validate", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @GetMapping("/validate")
     fun validateSession(authentication: Authentication): ResponseEntity<Map<String, String>> {
         log.info("Validating session")
         val email = (authentication.principal as? OAuth2User)?.attributes?.get("email") as? String
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(mapOf("error" to "Invalid authentication"))
+            ?: return jsonResponse(HttpStatus.UNAUTHORIZED, mapOf("error" to "Invalid authentication"))
 
         if (!allowedEmails.contains(email)) {
             log.error("Unauthorized session validation attempt by email: $email")
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(mapOf("error" to "Unauthorized: Session validation failed"))
+            return jsonResponse(HttpStatus.UNAUTHORIZED, mapOf("error" to "Unauthorized: Session validation failed"))
         }
 
         log.info("Session validated for email: $email")
-        return ResponseEntity.ok(mapOf("message" to "Session validated successfully"))
+        return jsonResponse(HttpStatus.OK, mapOf("message" to "Session validated successfully"))
     }
+
+    private fun jsonResponse(status: HttpStatus, body: Map<String, String>): ResponseEntity<Map<String, String>> =
+        ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).body(body)
 }
