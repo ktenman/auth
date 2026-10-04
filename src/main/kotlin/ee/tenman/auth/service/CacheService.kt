@@ -17,7 +17,7 @@ class CacheService(
             val cache = cacheManager.getCache(RedisConfiguration.USER_SESSION_CACHE)
             cache?.get(sessionId, Authentication::class.java)
         } catch (e: Exception) {
-            log.error("Failed to retrieve authentication for sessionId: $sessionId", e)
+            log.error("Failed to retrieve authentication", e)
             null
         }
     }
@@ -27,7 +27,7 @@ class CacheService(
             val cache = cacheManager.getCache(RedisConfiguration.USER_SESSION_CACHE)
             cache?.put(sessionId, authentication)
         } catch (e: Exception) {
-            log.error("Failed to save authentication for sessionId: $sessionId", e)
+            log.error("Failed to save authentication", e)
         }
     }
 
