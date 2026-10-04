@@ -34,11 +34,11 @@ class AuthController(
     @Loggable
     @GetMapping("/user-by-session", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun userBySession(@RequestParam sessionId: String): AuthResponse {
-        log.info("Checking session: $sessionId")
+        log.info("Checking session")
         val decodedSessionId = try {
             String(Base64.getDecoder().decode(sessionId))
         } catch (e: IllegalArgumentException) {
-            log.error("Invalid base64 sessionId: $sessionId")
+            log.error("Invalid base64 sessionId")
             return createUnauthorizedResponse("Invalid session ID")
         }
 
