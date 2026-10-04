@@ -1,8 +1,6 @@
 package ee.tenman.auth.config.aspect
 
-import tools.jackson.databind.ObjectMapper
 import ee.tenman.auth.config.TimeUtility
-import jakarta.annotation.Resource
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
@@ -16,8 +14,6 @@ import java.util.*
 @Component
 class LoggingAspect {
 
-    @Resource
-    private lateinit var objectMapper: ObjectMapper
     private val log = LoggerFactory.getLogger(javaClass)
 
     @Around("@annotation(Loggable)")
@@ -44,7 +40,7 @@ class LoggingAspect {
         try {
             logEntry(joinPoint)
             val result: Any = joinPoint.proceed()
-            logExit(joinPoint, result, startTime)
+            logExit(joinPoint, startTime)
             return result
         } finally {
             clearTransactionId()
@@ -53,17 +49,14 @@ class LoggingAspect {
 
     @Throws(Throwable::class)
     private fun logEntry(joinPoint: ProceedingJoinPoint) {
-        val argsJson = objectMapper.writeValueAsString(joinPoint.getArgs())
-        log.info("{} entered with arguments: {}", joinPoint.getSignature().toShortString(), argsJson)
+        log.info("{} entered", joinPoint.getSignature().toShortString())
     }
 
     @Throws(Throwable::class)
-    private fun logExit(joinPoint: ProceedingJoinPoint, result: Any, startTime: Long) {
-        val resultJson = objectMapper.writeValueAsString(result)
+    private fun logExit(joinPoint: ProceedingJoinPoint, startTime: Long) {
         log.info(
-            "{} exited with result: {} in {} seconds",
+            "{} exited in {} seconds",
             joinPoint.getSignature().toShortString(),
-            resultJson,
             TimeUtility.durationInSeconds(startTime)
         )
     }
