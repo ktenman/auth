@@ -31,6 +31,7 @@
     </div>
     <div class="text-center">
         <form action="/oauth2/authorization/google" method="get">
+            <input name="redirect" th:if="${param.redirect}" th:value="${param.redirect[0]}" type="hidden">
             <div class="form-check d-flex justify-content-center mb-3">
                 <input checked class="form-check-input me-2" id="remember-me" name="remember-me" type="checkbox">
                 <label class="form-check-label" for="remember-me">
