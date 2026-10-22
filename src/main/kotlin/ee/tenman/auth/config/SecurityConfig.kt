@@ -10,6 +10,9 @@ import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.authentication.RememberMeServices
@@ -36,7 +39,7 @@ class SecurityConfig(
     private lateinit var allowedEmails: String
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun securityFilterChain(http: HttpSecurity, clientRegistrations: ClientRegistrationRepository): SecurityFilterChain {
         http
             .authorizeHttpRequests { authorize ->
                 authorize
@@ -46,9 +49,19 @@ class SecurityConfig(
                     .requestMatchers("/home").authenticated()
                     .anyRequest().authenticated()
             }
+            .exceptionHandling { exceptions ->
+                exceptions.authenticationEntryPoint(ReturnPathEntryPoint())
+            }
             .oauth2Login { oauth2 ->
                 oauth2
                     .loginPage("/login")
+                    .authorizationEndpoint { endpoint ->
+                        endpoint.authorizationRequestResolver(
+                            ReturnPathResolver(
+                                DefaultOAuth2AuthorizationRequestResolver(clientRegistrations, DEFAULT_AUTHORIZATION_REQUEST_BASE_URI)
+                            )
+                        )
+                    }
                     .successHandler(authenticationSuccessHandler())
             }
             .logout { logout ->

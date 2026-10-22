@@ -4,6 +4,7 @@ import ee.tenman.auth.service.CacheService
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpSession
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.core.user.OAuth2User
@@ -35,11 +36,16 @@ class CustomAuthenticationSuccessHandler(
         if (email != null && allowedEmails.contains(email)) {
             log.info("User $email logged in successfully")
             cacheService.saveAuthentication(sessionId, authentication)
-            response.sendRedirect(redirectUrl)
+            response.sendRedirect(destination(session))
         } else {
             log.error("Not allowed to log in: $email")
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Email not allowed")
         }
+    }
+
+    private fun destination(session: HttpSession): String {
+        val path = session.getAttribute(RETURN_PATH) as String? ?: return redirectUrl
+        return redirectUrl.removeSuffix("/") + path
     }
 
     private fun generateHash(input: String): String {
