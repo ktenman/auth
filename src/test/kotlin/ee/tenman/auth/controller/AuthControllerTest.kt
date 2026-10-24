@@ -40,4 +40,18 @@ class AuthControllerTest {
             with(oauth2Login())
         }.andExpect { status { isUnauthorized() } }
     }
+
+    @Test
+    fun `validate names the signed-in user in the X-User-Id header`() {
+        mockMvc.get("/validate") {
+            with(oauth2Login().attributes { it["email"] = "mari.tamm@näide.ee" })
+        }.andExpect { header { string("X-User-Id", "mari.tamm@näide.ee") } }
+    }
+
+    @Test
+    fun `validate names no user for a disallowed session`() {
+        mockMvc.get("/validate") {
+            with(oauth2Login().attributes { it["email"] = "jüri.kask@näide.ee" })
+        }.andExpect { header { doesNotExist("X-User-Id") } }
+    }
 }
