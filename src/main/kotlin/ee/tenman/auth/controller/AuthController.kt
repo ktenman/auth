@@ -103,7 +103,10 @@ class AuthController(
         }
 
         log.info("Session validated for email: $email")
-        return jsonResponse(HttpStatus.OK, mapOf("message" to "Session validated successfully"))
+        return ResponseEntity.ok()
+            .header("X-User-Id", email)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(mapOf("message" to "Session validated successfully"))
     }
 
     private fun jsonResponse(status: HttpStatus, body: Map<String, String>): ResponseEntity<Map<String, String>> =
