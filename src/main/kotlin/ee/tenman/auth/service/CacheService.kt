@@ -31,5 +31,14 @@ class CacheService(
         }
     }
 
+    fun evictAuthentication(sessionId: String) {
+        try {
+            val cache = cacheManager.getCache(RedisConfiguration.USER_SESSION_CACHE)
+            cache?.evict(sessionId)
+        } catch (e: Exception) {
+            log.error("Failed to evict authentication", e)
+        }
+    }
+
 }
 

@@ -64,12 +64,14 @@ class SecurityConfig(
                     }
                     .successHandler(authenticationSuccessHandler())
             }
+            .csrf { it.ignoringRequestMatchers("/logout") }
             .logout { logout ->
                 logout
                     .logoutUrl("/logout")
                     .logoutSuccessHandler(logoutSuccessHandler())
                     .invalidateHttpSession(true)
-                    .deleteCookies("JSESSIONID")
+                    .deleteCookies("AUTHSESSION")
+                    .addLogoutHandler { request, _, _ -> request.getSession(false)?.id?.let(cacheService::evictAuthentication) }
                     .permitAll()
             }
             .rememberMe { rememberMe ->
