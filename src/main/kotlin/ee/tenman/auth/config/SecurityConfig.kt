@@ -1,36 +1,22 @@
 package ee.tenman.auth.config
 
-import ee.tenman.auth.repository.RedisPersistentTokenRepository
-import ee.tenman.auth.service.CacheService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Lazy
-import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
-import org.springframework.security.web.authentication.RememberMeServices
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler
-import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository
-import org.springframework.session.web.http.CookieSerializer
-import org.springframework.session.web.http.DefaultCookieSerializer
-import java.util.*
+import org.springframework.security.web.savedrequest.NullRequestCache
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(
-    private val redisConnectionFactory: RedisConnectionFactory,
-    @Lazy private val userDetailsService: UserDetailsService,
-    private val cacheService: CacheService
-) {
+class SecurityConfig {
 
     @Value("\${redirect.url}")
     private lateinit var redirectUrl: String
@@ -45,13 +31,15 @@ class SecurityConfig(
                 authorize
                     .requestMatchers("/login", "/logout").permitAll()
                     .requestMatchers("/oauth2/**").permitAll()
-                    .requestMatchers("/actuator/health", "/actuator/info", "/user-by-session").permitAll()
+                    .requestMatchers("/actuator/health").permitAll()
                     .requestMatchers("/home").authenticated()
                     .anyRequest().authenticated()
             }
             .exceptionHandling { exceptions ->
                 exceptions.authenticationEntryPoint(ReturnPathEntryPoint())
             }
+            // sign-in returns to RETURN_PATH, so a saved request would only open a session for every signed-out visit
+            .requestCache { it.requestCache(NullRequestCache()) }
             .oauth2Login { oauth2 ->
                 oauth2
                     .loginPage("/login")
@@ -63,6 +51,8 @@ class SecurityConfig(
                         )
                     }
                     .successHandler(authenticationSuccessHandler())
+                    // the default keeps the error in the session, the client secret inside it included; the login page never shows it
+                    .failureHandler { _, response, _ -> response.sendRedirect("/login?error") }
             }
             .csrf { it.ignoringRequestMatchers("/logout") }
             .logout { logout ->
@@ -71,12 +61,7 @@ class SecurityConfig(
                     .logoutSuccessHandler(logoutSuccessHandler())
                     .invalidateHttpSession(true)
                     .deleteCookies("AUTHSESSION")
-                    .addLogoutHandler { request, _, _ -> request.getSession(false)?.id?.let(cacheService::evictAuthentication) }
                     .permitAll()
-            }
-            .rememberMe { rememberMe ->
-                rememberMe
-                    .rememberMeServices(rememberMeServices())
             }
         return http.build()
     }
@@ -84,7 +69,7 @@ class SecurityConfig(
     @Bean
     fun authenticationSuccessHandler(): AuthenticationSuccessHandler {
         val emailsList = allowedEmails.split(",").map { it.trim() }
-        return CustomAuthenticationSuccessHandler(redirectUrl, emailsList, cacheService)
+        return CustomAuthenticationSuccessHandler(redirectUrl, emailsList)
     }
 
     @Bean
@@ -95,32 +80,4 @@ class SecurityConfig(
         return handler
     }
 
-    @Bean
-    fun cookieSerializer(): CookieSerializer {
-        val serializer = DefaultCookieSerializer()
-        serializer.setSameSite("None")
-        serializer.setUseSecureCookie(true)
-        serializer.setCookieName("AUTHSESSION")
-        serializer.setCookieMaxAge(2592000) // 30 days
-        return serializer
-    }
-
-    @Bean
-    fun persistentTokenRepository(): PersistentTokenRepository {
-        return RedisPersistentTokenRepository(redisConnectionFactory)
-    }
-
-    @Bean
-    fun rememberMeServices(): RememberMeServices {
-        val key = UUID.randomUUID().toString() // Generate a random key
-        return PersistentTokenBasedRememberMeServices(
-            key,
-            userDetailsService,
-            persistentTokenRepository()
-        ).apply {
-            setTokenValiditySeconds(2592000) // 30 days
-            setUseSecureCookie(true)
-            setParameter("remember-me")
-        }
-    }
 }

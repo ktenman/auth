@@ -1,0 +1,23 @@
+{
+  "comment": "Spring AOT registers the rest. These are the types the session keeps in Redis that it misses, traced with native-image-agent under bench/workload.sh, and the file Jedis reads its version from (the metadata repository's entry for it does not take effect).",
+  "reflection": [
+    {"type": "java.lang.Integer", "fields": [{"name": "TYPE"}]},
+    {"type": "java.lang.Long", "fields": [{"name": "TYPE"}]},
+    {"type": "java.time.Instant", "serializable": true},
+    {"type": "java.time.Ser", "serializable": true},
+    {"type": "java.util.Collections$UnmodifiableMap", "serializable": true},
+    {"type": "java.util.HashMap", "serializable": true},
+    {"type": "java.util.HashSet", "serializable": true},
+    {"type": "java.util.LinkedHashMap", "serializable": true},
+    {"type": "java.util.LinkedHashSet", "serializable": true},
+    {"type": "org.springframework.security.core.authority.FactorGrantedAuthority", "serializable": true},
+    {"type": "org.springframework.security.oauth2.core.AuthorizationGrantType", "serializable": true},
+    {"type": "org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest", "serializable": true},
+    {"type": "org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationResponseType", "serializable": true},
+    {"type": "org.springframework.security.oauth2.core.user.DefaultOAuth2User", "serializable": true},
+    {"type": "org.springframework.security.oauth2.core.user.OAuth2UserAuthority", "serializable": true}
+  ],
+  "resources": [
+    {"glob": "redis/clients/jedis/pom.properties"}
+  ]
+}

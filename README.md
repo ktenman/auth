@@ -21,16 +21,16 @@ web applications.
 
 ## Technologies Used
 
-- Kotlin 2.0.0
-- Spring Boot 3.3.1
+- Kotlin 2.4
+- Spring Boot 4.1
 - Spring Security
 - Redis for session storage
-- Thymeleaf for server-side templating
+- GraalVM native image (about 25 MiB of memory in use)
 - Docker for containerization
 
 ## Prerequisites
 
-- JDK 21
+- JDK 25
 - Docker and Docker Compose
 - Redis
 - Google OAuth2 credentials (Client ID and Client Secret)
@@ -47,11 +47,7 @@ The application uses environment variables for configuration. Make sure to set t
 ## Running the Application
 
 1. Set up the environment variables mentioned above.
-2. Start Redis using Docker Compose:
-   ```bash
-   docker-compose up -d
-    ```
-3. Run the application using Gradle:
+2. Run the application using Gradle. It starts Redis from `compose.yaml` with Docker Compose by itself:
    ```bash
    ./gradlew bootRun
    ```
@@ -64,7 +60,8 @@ The application will start on port 8083 by default.
 * `/oauth2/authorization/google`: Initiates Google OAuth2 authentication
 * `/user`: Returns authenticated user information
 * `/validate`: Validates the current session
-* `/logout`: Logs out the current user
+* `POST /logout`: Logs out the current user
+* `/actuator/health`: Health check, which also pings Redis
 
 ## Security Considerations
 
@@ -89,21 +86,22 @@ Run the tests using:
 ./gradlew test
 ```
 
-## ./gradlew test
+`bench/run.sh` signs in against a stand-in for Google, checks the session, page and logout paths, then prints the
+container's memory use. CI runs it against each native image before pushing it.
+
+## Docker
 
 The application includes a Dockerfile for easy containerization. To build and run the Docker image:
 
-1. Build the Docker image:
+1. Build the Docker image (compiling the native image takes a few minutes and about 6 GB of memory):
    ```bash
    docker build -t auth-service .
    ```
+   If the native image fails with a missing serialization or reflection registration for a type, add that type to
+   `src/main/resources/META-INF/native-image/auth/reachability-metadata.json`.
 
 2. Run the Docker container:
    ```bash
     docker run -p 8083:8083 -e GOOGLE_CLIENT_ID=your_client_id -e GOOGLE_CLIENT_SECRET=your_client_secret -e REDIRECT_URI=your_redirect_uri -e ALLOWED_EMAILS=allowed@email.com auth-service
     ```
-
----
-
-This README provides a comprehensive overview of the authentication service, including its features, setup instructions,
-and deployment guidelines, without the PlantUML diagram.
+   The container expects Redis at the host name `redis`; set `SPRING_DATA_REDIS_HOST` to use another one.
