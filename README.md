@@ -4,9 +4,10 @@
 
 ## Overview
 
-This authentication service is a Spring Boot application written in Kotlin that provides OAuth2 authentication using
-Google as the identity provider. It's designed to be a secure and scalable solution for handling user authentication in
-web applications.
+This authentication service is a Spring Boot application written in Kotlin that signs users in with Google and keeps
+their sessions in Redis. It works as a forward-auth gate: a reverse proxy asks it whether each request comes from a
+signed-in user, and a visitor who isn't signed in goes through the Google sign-in and comes back to the page they asked
+for.
 
 ![System Architecture](./screenshots/architecture.svg)
 
@@ -15,9 +16,9 @@ web applications.
 - OAuth2 authentication with Google
 - Session management using Redis
 - Configurable allowed email addresses
-- Custom authentication success handler
-- Secure logout mechanism
-- Session validation endpoint
+- Session validation endpoint for a reverse proxy, which names the signed-in user in `X-User-Id`
+- Return to the requested page after signing in
+- Logout with a plain form post
 
 ## Technologies Used
 
@@ -41,8 +42,13 @@ The application uses environment variables for configuration. Make sure to set t
 
 - `GOOGLE_CLIENT_ID`: Your Google OAuth2 client ID
 - `GOOGLE_CLIENT_SECRET`: Your Google OAuth2 client secret
-- `REDIRECT_URI`: The URI to redirect after successful authentication
+- `REDIRECT_URI`: The site a signed-in user is sent to, for example `https://example.com`. A sign-in that started from
+  a page on that site returns to that page
 - `ALLOWED_EMAILS`: Comma-separated list of email addresses allowed to authenticate
+
+Google sends users back to `/login/oauth2/code/google`. Add that address to the client's authorized redirect URIs in
+the Google Cloud console, for example `https://example.com/login/oauth2/code/google`, or
+`http://localhost:8083/login/oauth2/code/google` for a local run.
 
 ## Running the Application
 
@@ -56,19 +62,62 @@ The application will start on port 8083 by default.
 
 ## API Endpoints
 
-* `/login`: Login page
-* `/oauth2/authorization/google`: Initiates Google OAuth2 authentication
-* `/user`: Returns authenticated user information
-* `/validate`: Validates the current session
-* `POST /logout`: Logs out the current user
+* `/login`: Login page. Its `redirect` parameter is the page to return to after signing in
+* `/oauth2/authorization/google`: Initiates Google OAuth2 authentication, keeping `redirect` for the way back
+* `/login/oauth2/code/google`: Where Google sends the user back
+* `/validate`: Validates the current session. Answers 200 with the user's email in the `X-User-Id` header, or 401 if
+  that email is no longer allowed
+* `/user`: Returns the signed-in user's email, name and picture as JSON
+* `POST /logout`: Logs out the current user and redirects to `/`. Needs no CSRF token
+* `/`, `/home`: A page that confirms the sign-in
 * `/actuator/health`: Health check, which also pings Redis
+
+Everything except the login, OAuth2, logout and health paths redirects to `/login` without a session.
+
+## Protecting an Application
+
+A reverse proxy in front of the application asks `/validate` before it lets a request through, and passes the
+visitor's cookies along:
+
+1. With a session, `/validate` answers 200 and the proxy forwards the request, with the user's email in `X-User-Id`.
+2. Without one, it redirects to `/login?redirect=<page>`. The page comes from the `X-Forwarded-Uri` header.
+3. After the Google sign-in the user lands on `REDIRECT_URI` + that page.
+
+With Caddy, where `auth` is this service and `app` is the application behind it:
+
+```caddyfile
+example.com {
+    request_header -X-User-Id
+
+    @auth path /login /login/* /oauth2/* /logout
+    handle @auth {
+        reverse_proxy auth:8083
+    }
+
+    handle {
+        forward_auth auth:8083 {
+            uri /validate
+            copy_headers X-User-Id
+        }
+        reverse_proxy app:8080
+    }
+}
+```
+
+The login, OAuth2 and logout paths are served on the application's own domain, so the session cookie comes with every
+request to it. `request_header -X-User-Id` drops the header from incoming requests, so a route that skips
+`forward_auth` can't be handed a forged one.
+
+To sign a user out, the application posts a form to `/logout`.
 
 ## Security Considerations
 
-- Only configured email addresses are allowed to authenticate
-- Sessions are stored securely in Redis
-- CSRF protection is enabled
-- Secure cookie settings for session management
+- Only configured email addresses are let through: the list is checked at sign-in and again on every `/validate`
+- Sessions are stored in Redis for 30 days
+- The `AUTHSESSION` session cookie is `Secure` with `SameSite=None`
+- CSRF protection is enabled, except on `/logout`, where a cross-site POST can only sign the user out
+- The page to return to after signing in must be a path on the `REDIRECT_URI` site. Anything else lands on
+  `REDIRECT_URI` itself
 
 ## Development
 
@@ -91,7 +140,9 @@ container's memory use. CI runs it against each native image before pushing it.
 
 ## Docker
 
-The application includes a Dockerfile for easy containerization. To build and run the Docker image:
+CI publishes the image built from `main` to Docker Hub as `ktenman/auth:latest`, for amd64 and arm64.
+
+The application includes a Dockerfile for easy containerization. To build and run the Docker image yourself:
 
 1. Build the Docker image (compiling the native image takes a few minutes and about 6 GB of memory):
    ```bash
@@ -102,6 +153,8 @@ The application includes a Dockerfile for easy containerization. To build and ru
 
 2. Run the Docker container:
    ```bash
-    docker run -p 8083:8083 -e GOOGLE_CLIENT_ID=your_client_id -e GOOGLE_CLIENT_SECRET=your_client_secret -e REDIRECT_URI=your_redirect_uri -e ALLOWED_EMAILS=allowed@email.com auth-service
-    ```
+   docker run -p 8083:8083 -e GOOGLE_CLIENT_ID=your_client_id -e GOOGLE_CLIENT_SECRET=your_client_secret -e REDIRECT_URI=your_redirect_uri -e ALLOWED_EMAILS=allowed@email.com auth-service
+   ```
    The container expects Redis at the host name `redis`; set `SPRING_DATA_REDIS_HOST` to use another one.
+   It runs with `JAVA_OPTS="-Xmx128m -Xmn8m -Duser.timezone=Europe/Tallinn"`; set `JAVA_OPTS` to change the heap limit
+   or the time zone.
