@@ -6,7 +6,7 @@ LAYOUT_WITH_LEGEND()
 Person(user, "User", "End user of the application")
 
 System_Boundary(auth_system, "Authentication System") {
-Container(frontend, "Frontend", "Thymeleaf", "Provides login interface")
+Container(frontend, "Frontend", "HTML", "Provides login interface")
 Container(backend, "Backend", "Spring Boot, Kotlin", "Handles authentication logic")
 Container(redis, "Session Store", "Redis", "Stores session information")
 }

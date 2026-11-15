@@ -1,25 +1,19 @@
-FROM gradle:jdk21-alpine AS build
+FROM ghcr.io/graalvm/native-image-community:25 AS build
 
 WORKDIR /app
 
-COPY build.gradle.kts settings.gradle.kts /app/
+COPY gradlew build.gradle.kts settings.gradle.kts /app/
 COPY gradle /app/gradle
 COPY src /app/src
 
-RUN gradle clean build -x test --no-daemon
+RUN ./gradlew nativeCompile --no-daemon
 
-FROM bellsoft/liberica-openjre-alpine-musl:21
+FROM debian:13-slim
 
-WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
 
-COPY --from=build /app/build/libs/*.jar /app/app.jar
+COPY --from=build /app/build/native/nativeCompile/auth /app/auth
 
-# Install curl and necessary libraries in the target stage
-RUN apk update && apk add --no-cache curl libressl nghttp2-libs libssh2 brotli zlib
+ENV JAVA_OPTS="-Xmx128m -Xmn8m -Duser.timezone=Europe/Tallinn"
 
-ENV JAVA_OPTS="-Xms512m -Xmx1024m -Duser.timezone=Europe/Tallinn"
-ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=80"
-
-ENV SERVER_PORT=8083
-
-CMD ["sh", "-c", "java $JAVA_OPTS -Dserver.port=$SERVER_PORT -jar /app/app.jar"]
+CMD ["sh", "-c", "exec /app/auth $JAVA_OPTS"]

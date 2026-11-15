@@ -1,17 +1,14 @@
 package ee.tenman.auth.config
 
 import ee.tenman.auth.controller.LoginController
-import ee.tenman.auth.service.CacheService
 import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.NullSource
 import org.junit.jupiter.params.provider.ValueSource
-import org.mockito.Mockito.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 import org.springframework.context.annotation.Import
-import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.mock.web.MockHttpServletRequest
@@ -21,15 +18,15 @@ import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.context.SecurityContextImpl
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
+import org.springframework.security.web.WebAttributes
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository
-import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @WebMvcTest(
@@ -42,7 +39,6 @@ import kotlin.test.assertTrue
     ]
 )
 @Import(SecurityConfig::class)
-@MockitoBean(types = [CacheService::class, RedisConnectionFactory::class, PersistentTokenRepository::class])
 class SecurityConfigTest {
 
     @Autowired
@@ -50,9 +46,6 @@ class SecurityConfigTest {
 
     @Autowired
     private lateinit var successHandler: AuthenticationSuccessHandler
-
-    @Autowired
-    private lateinit var cacheService: CacheService
 
     @Test
     fun `validate sends a visitor without a session to sign in with the page they asked for`() {
@@ -83,14 +76,26 @@ class SecurityConfigTest {
     }
 
     @Test
-    fun `logout without a token signs the session out and expires its cookies`() {
+    fun `a signed-out page visit is sent to sign in without starting a session`() {
+        val request = mockMvc.get("/home").andExpect { redirectedUrl("/login") }.andReturn().request
+        assertNull(request.getSession(false))
+    }
+
+    @Test
+    fun `a cancelled sign-in returns to the login page without keeping the error in the session`() {
+        val request = mockMvc.get("/login/oauth2/code/google") {
+            param("error", "access_denied")
+            param("state", "x")
+        }.andExpect { redirectedUrl("/login?error") }.andReturn().request
+        assertNull(request.getSession(false)?.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION))
+    }
+
+    @Test
+    fun `logout without a token signs the session out and expires its cookie`() {
         val session = signedIn()
         mockMvc.post("/logout") { this.session = session }.andExpect {
             redirectedUrl("/")
-            cookie {
-                maxAge("AUTHSESSION", 0)
-                maxAge("remember-me", 0)
-            }
+            cookie { maxAge("AUTHSESSION", 0) }
         }
         assertTrue(session.isInvalid)
     }
@@ -120,13 +125,6 @@ class SecurityConfigTest {
             status { isFound() }
             redirectedUrl("/login")
         }
-    }
-
-    @Test
-    fun `logout forgets the authentication saved for the session`() {
-        val session = signedIn()
-        mockMvc.post("/logout") { this.session = session }
-        verify(cacheService).evictAuthentication(session.id)
     }
 
     private fun signedIn() = MockHttpSession().apply {

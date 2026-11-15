@@ -1,10 +1,8 @@
 package ee.tenman.auth.controller
 
-import ee.tenman.auth.config.aspect.Loggable
 import ee.tenman.auth.model.AuthResponse
 import ee.tenman.auth.model.AuthStatus
 import ee.tenman.auth.model.UserInfo
-import ee.tenman.auth.service.CacheService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
@@ -14,41 +12,16 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
 
 @RestController
 class AuthController(
-    private val cacheService: CacheService,
     @Value("\${allowed.emails}") private val allowedEmails: List<String>
 ) {
     private val log = LoggerFactory.getLogger(javaClass)
 
-    @Loggable
     @GetMapping("/user", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun user(authentication: Authentication): AuthResponse {
-        return handleAuthentication(authentication)
-    }
-
-    @Loggable
-    @GetMapping("/user-by-session", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun userBySession(@RequestParam sessionId: String): AuthResponse {
-        log.info("Checking session")
-        val decodedSessionId = try {
-            String(Base64.getDecoder().decode(sessionId))
-        } catch (e: IllegalArgumentException) {
-            log.error("Invalid base64 sessionId")
-            return createUnauthorizedResponse("Invalid session ID")
-        }
-
-        val authentication = cacheService.getAuthentication(decodedSessionId)
-            ?: return createUnauthorizedResponse("No authentication found for session")
-
-        return handleAuthentication(authentication)
-    }
-
-    private fun handleAuthentication(authentication: Authentication): AuthResponse {
         if (authentication !is OAuth2AuthenticationToken) {
             return createUnauthorizedResponse("Invalid authentication type")
         }
@@ -90,7 +63,6 @@ class AuthController(
         )
     }
 
-    @Loggable
     @GetMapping("/validate")
     fun validateSession(authentication: Authentication): ResponseEntity<Map<String, String>> {
         log.info("Validating session")
