@@ -4,10 +4,8 @@
 
 ## Overview
 
-This authentication service is a Spring Boot application written in Kotlin that signs users in with Google and keeps
-their sessions in Redis. It works as a forward-auth gate: a reverse proxy asks it whether each request comes from a
-signed-in user, and a visitor who isn't signed in goes through the Google sign-in and comes back to the page they asked
-for.
+This authentication service is a Spring Boot application written in Kotlin that signs users in with Google. It works
+as a forward-auth gate: a reverse proxy asks it whether each request comes from a signed-in user.
 
 ![System Architecture](./screenshots/architecture.svg)
 
@@ -16,7 +14,7 @@ for.
 - OAuth2 authentication with Google
 - Session management using Redis
 - Configurable allowed email addresses
-- Session validation endpoint for a reverse proxy, which names the signed-in user in `X-User-Id`
+- Session validation endpoint for a reverse proxy
 - Return to the requested page after signing in
 - Logout with a plain form post
 
@@ -42,8 +40,7 @@ The application uses environment variables for configuration. Make sure to set t
 
 - `GOOGLE_CLIENT_ID`: Your Google OAuth2 client ID
 - `GOOGLE_CLIENT_SECRET`: Your Google OAuth2 client secret
-- `REDIRECT_URI`: The site a signed-in user is sent to, for example `https://example.com`. A sign-in that started from
-  a page on that site returns to that page
+- `REDIRECT_URI`: The site a signed-in user is sent to, for example `https://example.com`
 - `ALLOWED_EMAILS`: Comma-separated list of email addresses allowed to authenticate
 
 Google sends users back to `/login/oauth2/code/google`. Add that address to the client's authorized redirect URIs in
@@ -63,12 +60,12 @@ The application will start on port 8083 by default.
 ## API Endpoints
 
 * `/login`: Login page. Its `redirect` parameter is the page to return to after signing in
-* `/oauth2/authorization/google`: Initiates Google OAuth2 authentication, keeping `redirect` for the way back
+* `/oauth2/authorization/google`: Initiates Google OAuth2 authentication
 * `/login/oauth2/code/google`: Where Google sends the user back
 * `/validate`: Validates the current session. Answers 200 with the user's email in the `X-User-Id` header, or 401 if
   that email is no longer allowed
 * `/user`: Returns the signed-in user's email, name and picture as JSON
-* `POST /logout`: Logs out the current user and redirects to `/`. Needs no CSRF token
+* `POST /logout`: Logs out the current user and redirects to `/`
 * `/`, `/home`: A page that confirms the sign-in
 * `/actuator/health`: Health check, which also pings Redis
 
@@ -76,12 +73,18 @@ Everything except the login, OAuth2, logout and health paths redirects to `/logi
 
 ## Protecting an Application
 
-A reverse proxy in front of the application asks `/validate` before it lets a request through, and passes the
-visitor's cookies along:
+A reverse proxy in front of the application asks `/validate` before it lets a request through:
 
 1. With a session, `/validate` answers 200 and the proxy forwards the request, with the user's email in `X-User-Id`.
-2. Without one, it redirects to `/login?redirect=<page>`. The page comes from the `X-Forwarded-Uri` header.
+2. Without one, it redirects to `/login?redirect=<page>`.
 3. After the Google sign-in the user lands on `REDIRECT_URI` + that page.
+
+For that the proxy has to:
+
+- send `/validate` the visitor's cookies and the requested page in `X-Forwarded-Uri`
+- serve the login, OAuth2 and logout paths on the application's own domain, so the session cookie comes with every
+  request to it
+- drop `X-User-Id` from incoming requests, so a route that skips `/validate` can't be handed a forged one
 
 With Caddy, where `auth` is this service and `app` is the application behind it:
 
@@ -103,12 +106,6 @@ example.com {
     }
 }
 ```
-
-The login, OAuth2 and logout paths are served on the application's own domain, so the session cookie comes with every
-request to it. `request_header -X-User-Id` drops the header from incoming requests, so a route that skips
-`forward_auth` can't be handed a forged one.
-
-To sign a user out, the application posts a form to `/logout`.
 
 ## Security Considerations
 
@@ -156,5 +153,4 @@ The application includes a Dockerfile for easy containerization. To build and ru
    docker run -p 8083:8083 -e GOOGLE_CLIENT_ID=your_client_id -e GOOGLE_CLIENT_SECRET=your_client_secret -e REDIRECT_URI=your_redirect_uri -e ALLOWED_EMAILS=allowed@email.com auth-service
    ```
    The container expects Redis at the host name `redis`; set `SPRING_DATA_REDIS_HOST` to use another one.
-   It runs with `JAVA_OPTS="-Xmx128m -Xmn8m -Duser.timezone=Europe/Tallinn"`; set `JAVA_OPTS` to change the heap limit
-   or the time zone.
+   Set `JAVA_OPTS` to override the default `-Xmx128m -Xmn8m -Duser.timezone=Europe/Tallinn`.
