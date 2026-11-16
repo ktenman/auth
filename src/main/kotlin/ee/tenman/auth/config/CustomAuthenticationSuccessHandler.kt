@@ -30,6 +30,7 @@ class CustomAuthenticationSuccessHandler(
             response.sendRedirect(destination(request.session))
         } else {
             log.error("Not allowed to log in: $email")
+            request.getSession(false)?.invalidate()
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Email not allowed")
         }
     }
