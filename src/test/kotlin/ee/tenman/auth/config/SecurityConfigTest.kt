@@ -76,6 +76,17 @@ class SecurityConfigTest {
     }
 
     @Test
+    fun `signing in with an email that is not allowed ends the session`() {
+        val session = MockHttpSession()
+        successHandler.onAuthenticationSuccess(
+            MockHttpServletRequest().apply { setSession(session) },
+            MockHttpServletResponse(),
+            google("jüri.kask@näide.ee")
+        )
+        assertTrue(session.isInvalid)
+    }
+
+    @Test
     fun `a signed-out page visit is sent to sign in without starting a session`() {
         val request = mockMvc.get("/home").andExpect { redirectedUrl("/login") }.andReturn().request
         assertNull(request.getSession(false))
@@ -138,8 +149,8 @@ class SecurityConfigTest {
         return response.redirectedUrl
     }
 
-    private fun google(): OAuth2AuthenticationToken {
-        val user = DefaultOAuth2User(AuthorityUtils.createAuthorityList("OAUTH2_USER"), mapOf("email" to "mari.tamm@näide.ee"), "email")
+    private fun google(email: String = "mari.tamm@näide.ee"): OAuth2AuthenticationToken {
+        val user = DefaultOAuth2User(AuthorityUtils.createAuthorityList("OAUTH2_USER"), mapOf("email" to email), "email")
         return OAuth2AuthenticationToken(user, user.authorities, "google")
     }
 }
