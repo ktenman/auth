@@ -57,13 +57,16 @@ the Google Cloud console, for example `https://example.com/login/oauth2/code/goo
 
 The application will start on port 8083 by default.
 
+The session cookie is `Secure`. Chrome keeps it from `http://localhost`; Safari drops it, so a local sign-in there ends
+on `/login?error`.
+
 ## API Endpoints
 
 * `/login`: Login page. Its `redirect` parameter is the page to return to after signing in
 * `/oauth2/authorization/google`: Initiates Google OAuth2 authentication
 * `/login/oauth2/code/google`: Where Google sends the user back
 * `/validate`: Validates the current session. Answers 200 with the user's email in the `X-User-Id` header, or 401 if
-  that email is no longer allowed
+  that email is not allowed
 * `/user`: Returns the signed-in user's email, name and picture as JSON
 * `POST /logout`: Logs out the current user and redirects to `/`
 * `/`, `/home`: A page that confirms the sign-in
@@ -82,6 +85,8 @@ A reverse proxy in front of the application asks `/validate` before it lets a re
 For that the proxy has to:
 
 - send `/validate` the visitor's cookies and the requested page in `X-Forwarded-Uri`
+- pass on the public host and scheme (`Host` or `X-Forwarded-Host`, and `X-Forwarded-Proto`): the address handed to
+  Google is built from them. Caddy does this by itself
 - serve the login, OAuth2 and logout paths on the application's own domain, so the session cookie comes with every
   request to it
 - drop `X-User-Id` from incoming requests, so a route that skips `/validate` can't be handed a forged one
@@ -111,8 +116,9 @@ example.com {
 
 - Only configured email addresses are let through: the list is checked at sign-in and again on every `/validate`
 - Sessions are stored in Redis for 30 days
-- The `AUTHSESSION` session cookie is `Secure` with `SameSite=None`
-- CSRF protection is enabled, except on `/logout`, where a cross-site POST can only sign the user out
+- The `AUTHSESSION` session cookie is `Secure` and `HttpOnly`
+- CSRF protection covers this service's own endpoints, not the application behind the gate. `/logout` is exempt: a
+  cross-site POST there can only sign the user out
 - The page to return to after signing in must be a path on the `REDIRECT_URI` site. Anything else lands on
   `REDIRECT_URI` itself
 
